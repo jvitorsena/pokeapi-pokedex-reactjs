@@ -8,16 +8,19 @@ export default function TablePokemon() {
     const [pokemon, setPokemon] = useState()
     const [itensPerPage, setItensPerPage] = useState(10) // 10 itens por pagina como default
     const [currentPage, setCurrentPage] = useState(0)
+    const [searchPokemon, setSearchPokemon] = useState(``)
 
     const pages = Math.ceil(pokemonList.length / itensPerPage) //Math.ceil arredonda para cima, nao deixando o numero quebrado
     const startIndex = currentPage * itensPerPage
     const endIndex = startIndex + itensPerPage
     const currentItens = pokemonList.slice(startIndex, endIndex)
 
+    const list = pokemonList.filter(el => el.name == searchPokemon)
+
     useEffect(() => {
         const fetchPosts = async () => {
             // const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100&offset=50');
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=200&offset=0');
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=300&offset=0');
             const postsData = await response.json();
             setPokemonList(postsData.results);
         };
@@ -41,6 +44,20 @@ export default function TablePokemon() {
     return (
         <div className="flex flex-col items-center" style={{ padding: "5px" }}>
             <div>Home</div>
+            <div className="mb-2">
+                Pesquisar:
+                <input onChange={(e) => setSearchPokemon(e.target.value)} type="text" className="border-2 rounded-xl mb-2 ml-2" />
+                {/* <div>{pokemonList.filter(el => el.name == searchPokemon)}</div> */}
+                {(list != '') ? (
+                    <div className="border-2 p-2">{list.map((list) => (
+                        <div>
+                            {list.name}
+                            <hr />
+                            {list.url}
+                        </div>
+                    ))}</div>
+                ) : null}
+            </div>
             <table className="border-2">
                 <thead className="">
                     <tr>
