@@ -8,14 +8,20 @@ export default function TablePokemon() {
     const [pokemon, setPokemon] = useState()
     const [itensPerPage, setItensPerPage] = useState(10) // 10 itens por pagina como default
     const [currentPage, setCurrentPage] = useState(0)
-    const [searchPokemon, setSearchPokemon] = useState(``)
+    const [searchPokemon, setSearchPokemon] = useState('')
 
     const pages = Math.ceil(pokemonList.length / itensPerPage) //Math.ceil arredonda para cima, nao deixando o numero quebrado
     const startIndex = currentPage * itensPerPage
     const endIndex = startIndex + itensPerPage
-    const currentItens = pokemonList.slice(startIndex, endIndex)
+    const currentItens = pokemonList.slice(startIndex, endIndex).filter((el) => el.name.toLowerCase().includes(searchPokemon.toLowerCase()))
 
-    const list = pokemonList.filter(el => el.name == searchPokemon)
+    function SearchPoke(value) {
+        setSearchPokemon(value)
+        setItensPerPage(1000)
+        if (value == '') {
+            setItensPerPage(10)
+        }
+    }
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -46,17 +52,8 @@ export default function TablePokemon() {
             <div>Home</div>
             <div className="mb-2">
                 Pesquisar:
-                <input onChange={(e) => setSearchPokemon(e.target.value)} type="text" className="border-2 rounded-xl mb-2 ml-2" />
+                <input onChange={(e) => SearchPoke(e.target.value)} type="text" className="border-2 rounded-xl mb-2 ml-2" />
                 {/* <div>{pokemonList.filter(el => el.name == searchPokemon)}</div> */}
-                {(list != '') ? (
-                    <div className="border-2 p-2">{list.map((list) => (
-                        <div>
-                            {list.name}
-                            <hr />
-                            {list.url}
-                        </div>
-                    ))}</div>
-                ) : null}
             </div>
             <table className="border-2">
                 <thead className="">
@@ -66,15 +63,27 @@ export default function TablePokemon() {
                     </tr>
                 </thead>
                 <tbody>
-                    <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage} />
-                    {currentItens.map((poke) => (
-                        <tr className="border-2" key={poke.name}>
-                            <td className="">{poke.name}</td>
-                            {/* <td>{poke.url}</td> */}
-                            <button className="mx-3 my-1 px-2 py-1 border-gray-300 border-2 rounded-lg hover:bg-slate-600 hover:text-white hover:scale-110 transition ease-in-out duration-300" onClick={() => getUrl(poke.url)}>Ver pokemon</button>
-                        </tr>
-                    ))}
-                    <PaginationComponent setCurrentPage={setCurrentPage} pages={pages} currentPage={currentPage} />
+                    {/* {(searchPokemon == '') ? ( */}
+                    <>
+                        {itensPerPage != '1000' ? (<PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage} />) : null}
+                        {currentItens != '' ? (
+                            <>
+                                {currentItens.map((poke) => (
+                                <tr className="border-2" key={poke.name}>
+                                    <td className="">{poke.name}</td>
+                                    {/* <td>{poke.url}</td> */}
+                                    <button className="mx-3 my-1 px-2 py-1 border-gray-300 border-2 rounded-lg hover:bg-slate-600 hover:text-white hover:scale-110 transition ease-in-out duration-300" onClick={() => getUrl(poke.url)}>Ver pokemon</button>
+                                </tr>
+                                ))}
+                                <PaginationComponent setCurrentPage={setCurrentPage} pages={pages} currentPage={currentPage} />
+                            </>
+                        ) : (
+                            <div className="font-bold text-2xl my-4 mx-4">
+                                Item não encontrado
+                            </div>
+                        )}
+                    </>
+                    {/* ) : null} */}
                 </tbody>
             </table>
             <div>

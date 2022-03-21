@@ -7,6 +7,7 @@ export default function AsideBar() {
             <div className={`flex flex-col items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-800 h-20`}>
                 {/* <Logo /> */}
                 logomarca
+                <img className='w-20' src='pokedex.png' />
             </div>
             <ul className="flex-grow">
                 <li className='hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'>

@@ -9,7 +9,7 @@ export default function PaginationSelector({ itensPerPage, setItensPerPage }) {
                 <option value={10}>10</option>
                 <option value={20}>20</option>
                 <option value={25}>25</option>
-                <option value={1000}>Todos</option>
+                <option value={9999}>Todos</option>
             </select>
         </div>
     )
